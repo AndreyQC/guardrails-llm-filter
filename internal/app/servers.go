@@ -142,6 +142,13 @@ func (e *App) GrpcServer(ctx context.Context) *grpc.Server {
 		opts = append(opts, grpc.Creds(insecure.NewCredentials()))
 	}
 
+	if e.cfg.GrpcMaxMsgSize > 0 {
+		opts = append(opts,
+			grpc.MaxRecvMsgSize(e.cfg.GrpcMaxMsgSize),
+			grpc.MaxSendMsgSize(e.cfg.GrpcMaxMsgSize),
+		)
+	}
+
 	srv := grpc.NewServer(opts...)
 	servicev1.RegisterGuardrailsApiServer(srv, e.GrpcController(ctx))
 	reflection.Register(srv)
@@ -179,8 +186,16 @@ func (e *App) APIServer(ctx context.Context) *http.Server {
 		//nolint:gosec // loopback dial to our own self-signed listener
 		dialCreds = grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{InsecureSkipVerify: true}))
 	}
+	dialOpts := []grpc.DialOption{dialCreds}
+	if e.cfg.GrpcMaxMsgSize > 0 {
+		// The gateway is a gRPC client of its own server: without this it keeps
+		// grpc-go's 4 MiB receive default and fails on large management pages
+		// (e.g. ListAuditRecords with stored texts).
+		dialOpts = append(dialOpts,
+			grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(e.cfg.GrpcMaxMsgSize)))
+	}
 	if err := servicev1.RegisterGuardrailsApiHandlerFromEndpoint(
-		ctx, mux, dialTarget(e.cfg.GRPCAddr), []grpc.DialOption{dialCreds},
+		ctx, mux, dialTarget(e.cfg.GRPCAddr), dialOpts,
 	); err != nil {
 		panic(fmt.Errorf("register management gateway: %w", err))
 	}

@@ -55,6 +55,13 @@ type Config struct {
 	// run cluster-internal behind a network boundary.
 	GrpcSecure bool `env:"GRPC_SECURE" envDefault:"false"`
 
+	// GrpcMaxMsgSize bounds management gRPC messages in both directions
+	// (bytes), applied to the server and to the grpc-gateway's in-process
+	// client. grpc-go defaults the receive limit to 4 MiB, which breaks large
+	// ListAuditRecords pages once the audit trail stores full request/response
+	// texts. Set 0 to keep the grpc-go defaults.
+	GrpcMaxMsgSize int `env:"GRPC_MAX_MSG_SIZE" envDefault:"33554432"`
+
 	GuardrailsRules   GuardrailsRulesCfg `envPrefix:"RULES_"`
 	GuardrailsHeaders GuardrailsHeaders  `envPrefix:"HEADERS_"`
 
