@@ -30,7 +30,7 @@ import { t } from '@/i18n/strings';
 
 import styles from './OverviewPage.module.scss';
 
-const WINDOW = 200;
+const WINDOW = 100;
 const RECENT_COUNT = 5;
 
 // Axes speak mono, like every number on this console.
