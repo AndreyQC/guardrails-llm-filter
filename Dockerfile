@@ -57,4 +57,13 @@ COPY --from=builder /src/configs /app/configs
 # data-plane HTTP (clients), metrics HTTP, configuration API HTTP
 EXPOSE 8080 9090 9080
 
+# The distroless runtime has no shell or wget, so HEALTHCHECK execs the
+# service binary itself, which probes /healthz over loopback.
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+	CMD ["/app/guardrails-llm-filter", "healthcheck"]
+
+# Run as the distroless non-root user (UID/GID 65532); the explicit USER
+# statement makes the intent auditable.
+USER nonroot:nonroot
+
 ENTRYPOINT ["/app/guardrails-llm-filter"]

@@ -10,7 +10,7 @@ import {
   WatchSVG,
 } from '@snack-uikit/icons';
 import { Typography } from '@snack-uikit/typography';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router';
 
 import { useHealth, useVersion } from '@/api/hooks';
 import { t } from '@/i18n/strings';

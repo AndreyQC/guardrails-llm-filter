@@ -2,7 +2,7 @@ import { Alert } from '@snack-uikit/alert';
 import { ButtonOutline } from '@snack-uikit/button';
 import { UpdateSVG } from '@snack-uikit/icons';
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
   Area,
   AreaChart,
