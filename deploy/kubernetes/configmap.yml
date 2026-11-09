@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: guardrails-llm-filter-env
+  namespace: guardrails-llm-filter
 data:
   GUARDRAILS_LOG_LEVEL: "info"
   # Data-plane listen address clients point at (this is what callers hit

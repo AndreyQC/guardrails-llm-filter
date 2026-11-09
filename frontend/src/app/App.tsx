@@ -1,6 +1,6 @@
 import { Spinner } from '@snack-uikit/loaders';
 import { lazy, Suspense } from 'react';
-import { Navigate, Route, BrowserRouter, Routes } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter, Routes } from 'react-router';
 
 import { AuditPage } from '@/pages/audit/AuditPage';
 import { MonitoringPage } from '@/pages/monitoring/MonitoringPage';

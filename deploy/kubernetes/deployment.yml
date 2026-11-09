@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: guardrails-llm-filter
+  namespace: guardrails-llm-filter
   labels:
     app: guardrails-llm-filter
 spec:
@@ -25,10 +26,14 @@ spec:
           type: RuntimeDefault
       containers:
         - name: guardrails-llm-filter
-          image: ghcr.io/cloud-ru-tech/guardrails-llm-filter:latest
+          # Pinned release tag 
+          image: ghcr.io/andreyqc/guardrails-llm-filter:0.2.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
+            # Match the distroless nonroot user baked into the image.
+            runAsUser: 65532
+            runAsGroup: 65532
             capabilities:
               drop:
                 - ALL
